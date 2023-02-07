@@ -1203,7 +1203,9 @@ static const struct
       AVCProfileHigh, "high"}, {
       AVCProfileHigh10, "high-10", "high-10-intra"}, {
       AVCProfileHigh422, "high-4:2:2", "high-4:2:2-intra"}, {
-      AVCProfileHigh444, "high-4:4:4", "high-4:4:4-intra"}
+      AVCProfileHigh444, "high-4:4:4", "high-4:4:4-intra"}, {
+      AVCProfileConstrainedBaseline, "baseline", "constrained-baseline"}, {
+      AVCProfileConstrainedHigh, "high", "constrained-high"}
 };
 
 const gchar *
