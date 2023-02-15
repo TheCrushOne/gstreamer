@@ -1899,6 +1899,11 @@ register_codecs (GstPlugin * plugin)
          * ones
          */
         rank = GST_RANK_MARGINAL;
+      } else if (g_str_has_prefix (codec_info->name, "OMX.")) {
+        rank = GST_RANK_SECONDARY;
+      } else if (g_str_has_prefix (codec_info->name, "c2.exynos") ||
+                 g_str_has_suffix (codec_info->name, "c2.google")) {
+        rank = is_video ? GST_RANK_PRIMARY : GST_RANK_SECONDARY;
       } else {
         /* On some devices there are audio codecs that don't start
          * with OMX., while there are also some that do. And on
