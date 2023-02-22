@@ -1041,6 +1041,24 @@ _set_display (GstGLImageSink * gl_sink, GstGLDisplay * display)
 }
 
 static gboolean
+_find_local_gl_context (GstGLImageSink * gl_sink)
+{
+  if (gst_gl_query_local_gl_context (GST_ELEMENT (gl_sink), GST_PAD_SRC,
+                                     &gl_sink->context))
+    GST_DEBUG_OBJECT (gl_sink,
+                      "found local context through src-query %p", gl_sink->context);
+    return TRUE;
+
+  if (gst_gl_query_local_gl_context (GST_ELEMENT (gl_sink), GST_PAD_SINK,
+                                     &gl_sink->context))
+    GST_DEBUG_OBJECT (gl_sink,
+                      "found local context through sink-query %p", gl_sink->context);
+    return TRUE;
+
+  return FALSE;
+}
+
+static gboolean
 _ensure_gl_setup (GstGLImageSink * gl_sink)
 {
   GError *error = NULL;
@@ -1056,17 +1074,19 @@ _ensure_gl_setup (GstGLImageSink * gl_sink)
 
       _set_context (gl_sink, NULL);
 
-      GST_DEBUG_OBJECT (gl_sink,
-          "No current context, creating one for %" GST_PTR_FORMAT,
-          gl_sink->display);
+      if(!_find_local_gl_context(gl_sink)) {
+        GST_DEBUG_OBJECT (gl_sink,
+                          "No current context, creating one for %" GST_PTR_FORMAT,
+                gl_sink->display);
 
-      if (gl_sink->other_context) {
-        other_context = gst_object_ref (gl_sink->other_context);
-      } else {
-        other_context =
-            gst_gl_display_get_gl_context_for_thread (gl_sink->display, NULL);
-      }
+        if (gl_sink->other_context) {
+          other_context = gst_object_ref (gl_sink->other_context);
+        } else {
+          other_context =
+                  gst_gl_display_get_gl_context_for_thread (gl_sink->display, NULL);
+        }
 
+<<<<<<< HEAD
       g_signal_emit_by_name (gl_sink->display, "create-context", other_context,
           &context);
       if (!context) {
@@ -1098,10 +1118,26 @@ _ensure_gl_setup (GstGLImageSink * gl_sink)
 
       _set_context (gl_sink, context);
       context = NULL;
+=======
+        if (!gst_gl_display_create_context (gl_sink->display,
+                                            other_context, &context, &error)) {
+          if (other_context)
+            gst_object_unref (other_context);
+          GST_OBJECT_UNLOCK (gl_sink->display);
+          goto context_error;
+        }
+        _set_context (gl_sink, context);
+        context = NULL;
+>>>>>>> f2b0f0452c... поиск локального контекста
 
-      GST_DEBUG_OBJECT (gl_sink,
-          "created context %" GST_PTR_FORMAT " from other context %"
-          GST_PTR_FORMAT, gl_sink->context, gl_sink->other_context);
+        GST_DEBUG_OBJECT (gl_sink,
+                          "created context %" GST_PTR_FORMAT " from other context %"
+        GST_PTR_FORMAT, gl_sink->context, gl_sink->other_context);
+      }
+      else {
+        GST_DEBUG_OBJECT (gl_sink,
+                          "found local context %p", gl_sink->context);
+      }
 
       window = gst_gl_context_get_window (gl_sink->context);
 
