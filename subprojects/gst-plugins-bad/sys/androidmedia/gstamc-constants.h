@@ -183,8 +183,6 @@ enum
   AVCProfileHigh10 = 0x10,
   AVCProfileHigh422 = 0x20,
   AVCProfileHigh444 = 0x40,
-  AVCProfileConstrainedBaseline = 0x10000,	// Added in API 27
-  AVCProfileConstrainedHigh = 0x80000 	// Added in API 27
 };
 
 enum
