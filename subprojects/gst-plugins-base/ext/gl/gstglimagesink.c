@@ -1056,18 +1056,9 @@ _ensure_gl_setup (GstGLImageSink * gl_sink)
 
       _set_context (gl_sink, NULL);
 
-      if(!_find_local_gl_context(gl_sink)) {
-        GST_DEBUG_OBJECT (gl_sink,
-                          "No current context, creating one for %" GST_PTR_FORMAT,
-                gl_sink->display);
-
-        if (gl_sink->other_context) {
-          other_context = gst_object_ref (gl_sink->other_context);
-        } else {
-          other_context =
-                  gst_gl_display_get_gl_context_for_thread (gl_sink->display, NULL);
-        }
-      }
+      GST_DEBUG_OBJECT (gl_sink,
+                        "No current context, creating one for %" GST_PTR_FORMAT,
+              gl_sink->display);
 
       if (gl_sink->other_context) {
         other_context = gst_object_ref (gl_sink->other_context);
