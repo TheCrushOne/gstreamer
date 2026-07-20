@@ -36,9 +36,7 @@
 #include <unistd.h>
 #endif
 
-#ifdef HAVE_FSEEKO
-#define FSEEK_FILE(file,offset)  (fseeko (file, (off_t) offset, SEEK_SET) != 0)
-#elif defined (G_OS_UNIX)
+#if defined (G_OS_UNIX)
 #define FSEEK_FILE(file,offset)  (lseek (fileno (file), (off_t) offset, SEEK_SET) == (off_t) -1)
 #else
 #define FSEEK_FILE(file,offset)  (fseek (file, offset, SEEK_SET) != 0)

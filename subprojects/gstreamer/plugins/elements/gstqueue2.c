@@ -1501,9 +1501,7 @@ gst_queue2_have_data (GstQueue2 * queue, guint64 offset, guint length)
   return FALSE;
 }
 
-#ifdef HAVE_FSEEKO
-#define FSEEK_FILE(file,offset)  (fseeko (file, (off_t) offset, SEEK_SET) != 0)
-#elif defined (G_OS_UNIX) || defined (G_OS_WIN32)
+#if defined (G_OS_UNIX) || defined (G_OS_WIN32)
 #define FSEEK_FILE(file,offset)  (lseek (fileno (file), (off_t) offset, SEEK_SET) == (off_t) -1)
 #else
 #define FSEEK_FILE(file,offset)  (fseek (file, offset, SEEK_SET) != 0)

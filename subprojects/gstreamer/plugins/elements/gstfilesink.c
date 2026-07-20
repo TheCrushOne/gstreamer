@@ -594,9 +594,7 @@ gst_file_sink_query (GstBaseSink * bsink, GstQuery * query)
   return res;
 }
 
-#ifdef HAVE_FSEEKO
-# define __GST_STDIO_SEEK_FUNCTION "fseeko"
-#elif defined (G_OS_UNIX) || defined (G_OS_WIN32)
+#if defined (G_OS_UNIX) || defined (G_OS_WIN32)
 # define __GST_STDIO_SEEK_FUNCTION "lseek"
 #else
 # define __GST_STDIO_SEEK_FUNCTION "fseek"
@@ -611,10 +609,7 @@ gst_file_sink_do_seek (GstFileSink * filesink, guint64 new_offset)
   if (gst_file_sink_flush_buffer (filesink) != GST_FLOW_OK)
     goto flush_buffer_failed;
 
-#ifdef HAVE_FSEEKO
-  if (fseeko (filesink->file, (off_t) new_offset, SEEK_SET) != 0)
-    goto seek_failed;
-#elif defined (G_OS_UNIX) || defined (G_OS_WIN32)
+#if defined (G_OS_UNIX) || defined (G_OS_WIN32)
   if (lseek (fileno (filesink->file), (off_t) new_offset,
           SEEK_SET) == (off_t) - 1)
     goto seek_failed;

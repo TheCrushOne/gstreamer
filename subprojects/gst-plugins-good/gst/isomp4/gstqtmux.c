@@ -2427,10 +2427,7 @@ write_error:
 static gboolean
 gst_qt_mux_seek_to_beginning (FILE * f)
 {
-#ifdef HAVE_FSEEKO
-  if (fseeko (f, (off_t) 0, SEEK_SET) != 0)
-    return FALSE;
-#elif defined (G_OS_UNIX) || defined (G_OS_WIN32)
+#if defined (G_OS_UNIX) || defined (G_OS_WIN32)
   if (lseek (fileno (f), (off_t) 0, SEEK_SET) == (off_t) - 1)
     return FALSE;
 #else
