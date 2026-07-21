@@ -734,9 +734,7 @@ gst_file_sink_get_current_offset (GstFileSink * filesink, guint64 * p_pos)
    * too
    */
 
-#ifdef HAVE_FTELLO
-  ret = ftello (filesink->file);
-#elif defined (G_OS_UNIX) || defined (G_OS_WIN32)
+#if defined (G_OS_UNIX) || defined (G_OS_WIN32)
   ret = lseek (fileno (filesink->file), 0, SEEK_CUR);
 #else
   ret = (off_t) ftell (filesink->file);
